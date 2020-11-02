@@ -1,15 +1,30 @@
 import { Auth } from 'aws-amplify';
-import React, { useState } from 'react';
-import {
-    Button as BSButton,
-    Form as BSForm,
-    FormGroup as BSFormGroup,
-} from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import { Form as BSForm, FormGroup as BSFormGroup } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import { AnimatedView, Container, TextButton, Title } from '../../Components';
+import {
+    AnimatedView,
+    Container,
+    TextButton,
+    Title,
+    View,
+} from '../../Components';
+import { Button } from '../../Components/Buttons';
 import { colors } from '../../Styles';
-import { MODE_TYPE, VerificationFormProps } from '../../types/Login/Login';
+import { AWS_EXCEPTIONS } from '../../Types/AWS_CONSTANTS';
+import {
+    LoginFromProps,
+    MODE_TYPE,
+    SignupFromProps,
+    VerificationFormProps,
+} from '../../Types/Login/Login';
 import './Login-style.scss';
+
+const USER = {
+    email: 'test@gmail.com',
+    password: 'Test@123',
+};
 
 function Login() {
     const [MODE, setMode] = useState<MODE_TYPE>('LOGIN');
@@ -18,16 +33,11 @@ function Login() {
         <Container>
             <LoginCard>
                 {/* <Title>{MODE}</Title> */}
-                {MODE === 'LOGIN' ? <LoginForm /> : <SignupForm />}
-                <TextButton
-                    onClick={() =>
-                        setMode(MODE === 'LOGIN' ? 'REGISTER' : 'LOGIN')
-                    }>
-                    {MODE === 'LOGIN'
-                        ? 'Already have an account? '
-                        : "Don't have an account yet? "}
-                    <strong>{MODE === 'LOGIN' ? 'Login' : 'Register'}</strong>
-                </TextButton>
+                {MODE === 'LOGIN' ? (
+                    <LoginForm changeMode={(mode) => setMode(mode)} />
+                ) : (
+                    <SignupForm changeMode={(mode) => setMode(mode)} />
+                )}
             </LoginCard>
         </Container>
     );
@@ -35,20 +45,40 @@ function Login() {
 
 export default Login;
 
-function LoginForm() {
+function LoginForm({ changeMode }: LoginFromProps) {
     const [emailId, setEmail] = useState('');
+    const [emailErrMsg, setEmailErrMsg] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordErrMsg, setPasswordErrMsg] = useState('');
+    const [isLoading, setLoading] = useState(false);
+    const history = useHistory();
 
     const handleLogin = (e: any) => {
         e.preventDefault();
-        Auth.signIn({
-            username: emailId,
-            password,
-        })
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((err) => console.log(err));
+        setLoading(true);
+        if (emailId !== '' && password !== '') {
+            // Auth.signIn({
+            //     username: emailId,
+            //     password,
+            // })
+            //     .then((res) => {
+            //         console.log(res);
+            //     })
+            //     .catch((err) => {
+            //         if (err.code === AWS_EXCEPTIONS.UserNotFoundException) {
+            //         }
+            //         console.log(err);
+            //     });
+            if (emailId === USER.email && password === USER.password) {
+                setTimeout(() => {
+                    setLoading(false);
+                    history.push('/dashboard');
+                }, 2 * 1000);
+            }
+        } else {
+            setEmailErrMsg('Please enter you email id.');
+            setLoading(false);
+        }
     };
 
     return (
@@ -62,6 +92,7 @@ function LoginForm() {
                         value={emailId}
                         onChange={(e: any) => setEmail(e.target.value)}
                     />
+                    <ErrorText>{emailErrMsg}</ErrorText>
                 </FormGroup>
                 <FormGroup>
                     <FormControl
@@ -70,33 +101,66 @@ function LoginForm() {
                         value={password}
                         onChange={(e: any) => setPassword(e.target.value)}
                     />
+                    <ErrorText>{passwordErrMsg}</ErrorText>
                 </FormGroup>
                 <FormGroup>
                     <Form.Check type="checkbox" label="Remember Me?" />
                 </FormGroup>
-                <Button onClick={handleLogin}>Login</Button>
+                <Button onClick={handleLogin} isLoading={isLoading}>
+                    Login
+                </Button>
             </Form>
+            <TextButton onClick={() => changeMode('REGISTER')}>
+                Don't have an account yet?
+                <strong> Register</strong>
+            </TextButton>
         </AnimatedView>
     );
 }
 
-function SignupForm() {
+function SignupForm({ changeMode }: SignupFromProps) {
     const [emailId, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [cnfPassword, setCnfPassword] = useState('');
     const [codeSent, setCodeSent] = useState(false);
 
+    const [emailIdErr, setEmailIdErr] = useState('');
+    const [passwordErr, setPasswordErr] = useState('');
+    const [cnfPassErr, setCnfPassErr] = useState('');
+
+    const validate = () => {
+        setEmailIdErr('');
+        setPasswordErr('');
+        setCnfPassErr('');
+        if (emailId === '') {
+            setEmailIdErr('Please enter your email id.');
+            return false;
+        }
+        if (password.length < 8) {
+            setPasswordErr(
+                'Password must contain more then or equal to 8 char.'
+            );
+            return false;
+        }
+        if (password !== cnfPassword) {
+            setCnfPassErr('Password not matched');
+            return false;
+        }
+        return true;
+    };
+
     const sendCode = (e: any) => {
         e.preventDefault();
-        if (password === cnfPassword) {
-            Auth.signUp({
-                username: emailId,
-                password,
-            })
-                .then((res) => {
-                    setCodeSent(true);
-                })
-                .catch((err) => console.log(err));
+        setCodeSent(true);
+        if (validate()) {
+            // Auth.signUp({
+            //     username: emailId,
+            //     password,
+            // })
+            //     .then((res) => {
+            //         setCodeSent(true);
+            //     })
+            //     .catch((err) => console.log(err));
         }
     };
 
@@ -106,6 +170,9 @@ function SignupForm() {
         }
     };
 
+    return <ProfileSetupForm />;
+
+    // eslint-disable-next-line no-unreachable
     if (codeSent) {
         return <VerificationForm username={emailId} callback={handleSubmit} />;
     } else {
@@ -120,6 +187,7 @@ function SignupForm() {
                             value={emailId}
                             onChange={(e: any) => setEmail(e.target.value)}
                         />
+                        <ErrorText>{emailIdErr}</ErrorText>
                     </FormGroup>
                     <FormGroup>
                         <FormControl
@@ -128,6 +196,7 @@ function SignupForm() {
                             value={password}
                             onChange={(e: any) => setPassword(e.target.value)}
                         />
+                        <ErrorText>{passwordErr}</ErrorText>
                     </FormGroup>
                     <FormGroup>
                         <FormControl
@@ -138,6 +207,8 @@ function SignupForm() {
                                 setCnfPassword(e.target.value)
                             }
                         />
+
+                        <ErrorText>{cnfPassErr}</ErrorText>
                     </FormGroup>
                     <FormGroup>
                         <Form.Check type="checkbox" label="Remember Me?" />
@@ -146,6 +217,10 @@ function SignupForm() {
                         Signup
                     </Button>
                 </Form>
+                <TextButton onClick={() => changeMode('LOGIN')}>
+                    Already have an account?
+                    <strong> Login</strong>
+                </TextButton>
             </AnimatedView>
         );
     }
@@ -156,9 +231,10 @@ function VerificationForm({ username, callback }: VerificationFormProps) {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        Auth.confirmSignUp(username, code)
-            .then((res) => callback(res))
-            .catch((err) => callback(err));
+        // Auth.confirmSignUp(username, code)
+        //     .then((res) => callback(res))
+        //     .catch((err) => callback(err));
+        callback('SUCCESS');
     };
 
     const handleResend = (e: any) => {};
@@ -180,6 +256,34 @@ function VerificationForm({ username, callback }: VerificationFormProps) {
                 </ResendButtonContainer>
                 <Button type="submit" onClick={handleSubmit}>
                     Verify
+                </Button>
+            </Form>
+        </AnimatedView>
+    );
+}
+
+function ProfileSetupForm() {
+    const [userName, setUserName] = useState('');
+
+    const handleSubmit = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {};
+
+    return (
+        <AnimatedView>
+            <Title>PROFILE</Title>
+            <Form>
+                <View>
+                    <AvatarEdit alt="Avatar" />
+                </View>
+                <FormGroup>
+                    <FormControl
+                        type="text"
+                        placeholder="Enter name"
+                        value={userName}
+                        onChange={(e: any) => setUserName(e.target.value)}
+                    />
+                </FormGroup>
+                <Button type="submit" onClick={handleSubmit}>
+                    Next
                 </Button>
             </Form>
         </AnimatedView>
@@ -216,13 +320,6 @@ const FormControl = styled(BSForm.Control)`
     padding: 30px 20px;
 `;
 
-const Button = styled(BSButton)`
-    width: 100%;
-    background-color: ${colors.primary};
-    padding: 15px;
-
-    font-size: 24px;
-`;
 const ResendButtonContainer = styled.div`
     width: 100%;
     display: flex;
@@ -233,4 +330,86 @@ const ResendButton = styled.p`
     color: ${colors.primary};
     font-weight: bold;
     cursor: pointer;
+`;
+
+const ErrorText = styled.small`
+    color: red;
+`;
+
+const AvatarEdit = ({ currectSrc, alt }: any) => {
+    const inputRef = useRef(null);
+    const defaultAvatarUrl = require('../../assets/avatar.svg');
+    const [src, setSrc] = useState(currectSrc);
+
+    const showUploadDialog = (e: any) => {
+        const { current }: any = inputRef;
+        current.click();
+        //current.onClick((e:any) => console.log(e));
+        // current.onChange((e:any) => {
+        //     console.log(e);
+        // });
+        //console.log(current);
+    };
+
+    const readFile = (file: any) => {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            try {
+                setSrc(e.target?.result);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+    return (
+        <AvatarContainer onClick={showUploadDialog}>
+            <Avatar
+                src={typeof src !== 'undefined' ? src : defaultAvatarUrl}
+                alt="Avatar"
+            />
+            <input
+                ref={inputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e: any) => {
+                    readFile(e.target.files[0]);
+                }}
+            />
+        </AvatarContainer>
+    );
+};
+
+const Avatar = styled.img`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+`;
+
+const AvatarContainer = styled.div`
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    border: none;
+    overflow: hidden;
+    margin: 20px;
+    cursor: pointer;
+    transition: all 0.25s linear;
+
+    input {
+        opacity: 0;
+    }
+
+    &:hover {
+        ${Avatar} {
+            opacity: 0.7;
+            transition: all 0.25s linear;
+        }
+    }
 `;
