@@ -29,8 +29,10 @@ const ButtonContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${(props: PrimaryButtonsProps) =>
-        !props.isLoading ? colors.primary : '#fff'};
+    background-color: ${(props: any) =>
+        !props.isLoading
+            ? colors.primary
+            : props.theme.SECONDARY_BACKGROUND_COLOR};
     padding: 15px;
     border-radius: ${metrics.baseRadius / 2}px;
     cursor: ${(props: PrimaryButtonsProps) =>
@@ -39,7 +41,9 @@ const ButtonContainer = styled.div`
     overflow: hidden;
 
     &:hover {
-        background-color: ${(props: PrimaryButtonsProps) =>
-            !props.isLoading ? '#6366fb' : '#fff'};
+        background-color: ${(props: any) =>
+            !props.isLoading
+                ? '#6366fb'
+                : props.theme.SECONDARY_BACKGROUND_COLOR};
     }
 `;

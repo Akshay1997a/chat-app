@@ -3,9 +3,12 @@ import { Container as BSContainer } from 'react-bootstrap';
 import styled from 'styled-components';
 import { colors } from '../Styles';
 
-export const Container = styled(BSContainer)`
+export const Container = styled(BSContainer).attrs({
+    fluid: true,
+})`
     width: 100vw;
     height: 100vh;
+    background-color: ${(props) => props.theme.PRIMARY_BACKGROUND_COLOR};
 `;
 
 export const View = styled.div`
@@ -23,7 +26,7 @@ export const Title = styled.p`
     position: relative;
     font-size: 35px;
     font-weight: bold;
-    color: ${colors.textColor};
+    color: ${(props) => props.theme.PRIMARY_TEXT_COLOR};
 
     &::before {
         position: absolute;
@@ -56,6 +59,8 @@ export const SaperatorContainer = styled.div`
 export const TextButton = styled.p`
     cursor: pointer;
     text-align: center;
+
+    color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
 `;
 
 export const AnimatedView = styled.div`

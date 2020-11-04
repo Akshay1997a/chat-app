@@ -11,6 +11,7 @@ import {
     View,
 } from '../../Components';
 import { Button } from '../../Components/Buttons';
+import Header from '../../Components/Header/Header';
 import { colors } from '../../Styles';
 import { AWS_EXCEPTIONS } from '../../Types/AWS_CONSTANTS';
 import {
@@ -31,6 +32,7 @@ function Login() {
 
     return (
         <Container>
+            <Header />
             <LoginCard>
                 {/* <Title>{MODE}</Title> */}
                 {MODE === 'LOGIN' ? (
@@ -72,7 +74,7 @@ function LoginForm({ changeMode }: LoginFromProps) {
             if (emailId === USER.email && password === USER.password) {
                 setTimeout(() => {
                     setLoading(false);
-                    history.push('/dashboard');
+                    //history.push('/dashboard');
                 }, 2 * 1000);
             }
         } else {
@@ -298,8 +300,8 @@ const LoginCard = styled.div`
     transform: translate(-50%, -50%);
     padding: 20px 50px;
 
-    background: #ffffff;
-    box-shadow: 4px 4px 50px rgba(0, 0, 0, 0.25);
+    background: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
+    box-shadow: ${(props) => props.theme.SHADOW};
     border-radius: 10px;
 
     transition: all 0.25s linear;
@@ -314,10 +316,26 @@ const Form = styled(BSForm)`
 
 const FormGroup = styled(BSFormGroup)`
     width: 100%;
+
+    .form-check-label {
+        color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
+    }
 `;
 
 const FormControl = styled(BSForm.Control)`
     padding: 30px 20px;
+    color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
+    background: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
+
+    &::placeholder {
+        color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
+    }
+
+    &:focus {
+        background: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
+        color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
+        border-color: ${props => colors.primary};
+    }
 `;
 
 const ResendButtonContainer = styled.div`
