@@ -45,9 +45,9 @@ function Login() {
     );
 }
 
-export default Login;
+export default React.memo(Login);
 
-function LoginForm({ changeMode }: LoginFromProps) {
+const LoginForm = React.memo(({ changeMode }: LoginFromProps) => {
     const [emailId, setEmail] = useState('');
     const [emailErrMsg, setEmailErrMsg] = useState('');
     const [password, setPassword] = useState('');
@@ -118,9 +118,9 @@ function LoginForm({ changeMode }: LoginFromProps) {
             </TextButton>
         </AnimatedView>
     );
-}
+});
 
-function SignupForm({ changeMode }: SignupFromProps) {
+const SignupForm = React.memo(({ changeMode }: SignupFromProps) => {
     const [emailId, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [cnfPassword, setCnfPassword] = useState('');
@@ -226,7 +226,7 @@ function SignupForm({ changeMode }: SignupFromProps) {
             </AnimatedView>
         );
     }
-}
+});
 
 function VerificationForm({ username, callback }: VerificationFormProps) {
     const [code, setCode] = useState('');
@@ -326,6 +326,7 @@ const FormControl = styled(BSForm.Control)`
     padding: 30px 20px;
     color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
     background: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
+    transition: all 0.25s linear;
 
     &::placeholder {
         color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
@@ -334,7 +335,7 @@ const FormControl = styled(BSForm.Control)`
     &:focus {
         background: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
         color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
-        border-color: ${props => colors.primary};
+        border-color: ${(props) => colors.primary};
     }
 `;
 

@@ -8,7 +8,7 @@ export enum ROUTE_PATHS {
     DASHBOARD = '/dashboard',
 }
 
-export function RouteStack() {
+function RouteStack() {
     return (
         <Router>
             <Switch>
@@ -22,3 +22,5 @@ export function RouteStack() {
         </Router>
     );
 }
+
+export default React.memo(RouteStack);

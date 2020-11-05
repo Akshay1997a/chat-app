@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { RouteStack } from './route';
+import RouteStack from './route';
 import styled, { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './Styles/themes';
 

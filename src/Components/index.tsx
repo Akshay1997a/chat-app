@@ -9,6 +9,7 @@ export const Container = styled(BSContainer).attrs({
     width: 100vw;
     height: 100vh;
     background-color: ${(props) => props.theme.PRIMARY_BACKGROUND_COLOR};
+    transition: all 0.25s linear;
 `;
 
 export const View = styled.div`
