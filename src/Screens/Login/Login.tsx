@@ -402,12 +402,9 @@ const AvatarEdit = ({ currectSrc, alt }: any) => {
     );
 };
 
-const Avatar = styled.img`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+export const Avatar = styled.img`
+    /* width: 100%;
+    height: 100%; */
 `;
 
 const AvatarContainer = styled.div`

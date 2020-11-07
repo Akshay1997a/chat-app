@@ -23,7 +23,7 @@ export type THEME_TYPE = 'light' | 'dark';
 
 export const lightTheme: DefaultTheme = {
     mode: 'light',
-    PRIMARY_BACKGROUND_COLOR: '#f7f7f7',
+    PRIMARY_BACKGROUND_COLOR: '#e5e5e5',
     SECONDARY_BACKGROUND_COLOR: '#fff',
     PRIMARY_TEXT_COLOR: '#202125',
     SECONDARY_TEXT_COLOR: '#5e6267',

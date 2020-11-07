@@ -1,7 +1,7 @@
-import React from 'react';
 import { Container as BSContainer } from 'react-bootstrap';
 import styled from 'styled-components';
 import { colors } from '../Styles';
+import { SaperatorProps } from './index.d';
 
 export const Container = styled(BSContainer).attrs({
     fluid: true,
@@ -42,11 +42,12 @@ export const Title = styled.p`
 `;
 
 export const Saperator = styled.div`
-    width: 100%;
-    height: 0px;
+    width: ${(props: SaperatorProps) =>
+        props.verient === 'horizontal' ? '100%' : '0px'};
+    height: ${(props: SaperatorProps) =>
+        props.verient === 'vertical' ? '100%' : '0px'};
 
-    opacity: 0.3;
-    border: 1px solid #000000;
+    border: 1px solid rgba(0,0,0,0.2);
 `;
 
 export const SaperatorContainer = styled.div`
