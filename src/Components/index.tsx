@@ -1,3 +1,4 @@
+import React from 'react';
 import { Container as BSContainer } from 'react-bootstrap';
 import styled from 'styled-components';
 import { colors } from '../Styles';
@@ -47,7 +48,7 @@ export const Saperator = styled.div`
     height: ${(props: SaperatorProps) =>
         props.verient === 'vertical' ? '100%' : '0px'};
 
-    border: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 export const SaperatorContainer = styled.div`
@@ -79,4 +80,38 @@ export const AnimatedView = styled.div`
             transform: translateY(0px);
         }
     }
+`;
+
+type ACTIVE_TYPE = 'ACTIVE' | 'IN-ACTIVE' | 'NONE';
+
+interface AvatarProps
+    extends React.DetailedHTMLProps<
+        React.ImgHTMLAttributes<HTMLImageElement>,
+        HTMLImageElement
+    > {
+    activeStatus?: ACTIVE_TYPE;
+}
+
+export const Avatar = (props: AvatarProps) => (
+    <AvatarContainer>
+        <img {...props} alt={props.alt} />
+        {props.activeStatus && (
+            <ActiveStatus status={props.activeStatus || 'NONE'} />
+        )}
+    </AvatarContainer>
+);
+
+const ActiveStatus: any = styled.div`
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    background-color: ${(props: any) =>
+        props.status === 'ACTIVE' ? colors.success : colors.danger};
+`;
+
+const AvatarContainer = styled.div`
+    position: relative;
 `;

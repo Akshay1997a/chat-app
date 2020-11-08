@@ -3,6 +3,7 @@ import {
     faPaperPlane,
     faPencilAlt,
     faSearch,
+    faSmile,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
@@ -10,9 +11,8 @@ import { Container } from '../../Components';
 import Header from '../../Components/Header/Header';
 import { TextInput } from '../../Components/Inputs/index';
 import { colors, metrics } from '../../Styles';
-import { Avatar } from '../Login/Login';
+import { Avatar } from '../../Components';
 import { PeopleComponentProps } from '../../Types/People';
-import { Button } from 'react-bootstrap';
 
 export function Dashboard() {
     const PeopleComponent = ({ displayName, status }: PeopleComponentProps) => (
@@ -41,6 +41,7 @@ export function Dashboard() {
                     alt="Avatar"
                     width="60px"
                     height="60px"
+                    activeStatus="ACTIVE"
                 />
                 <div style={{ flex: 1 }}>
                     <PersonalName>Akshay Dighorikar</PersonalName>
@@ -68,47 +69,55 @@ export function Dashboard() {
         </LeftPanel>
     );
 
+    const RightPanelWrapper = () => (
+        <RightPanel>
+            <PeopleHeader>
+                <Avatar
+                    src={require('../../assets/avatar.svg')}
+                    alt="Avatar"
+                    width="60px"
+                    height="60px"
+                    activeStatus="ACTIVE"
+                />
+                <div>
+                    <PersonalName>Snehal Dighorikar</PersonalName>
+                    <StatusText>Online</StatusText>
+                </div>
+            </PeopleHeader>
+            <ChatContainer>
+                {Array.from({ length: 10 }, (o) => (
+                    <>
+                        <Message verient="RECEIVER">
+                            <ReceiversMessage>Hi!</ReceiversMessage>
+                        </Message>
+                        <Message verient="SENDER">
+                            <SendersMessage>Hello</SendersMessage>
+                        </Message>
+                    </>
+                ))}
+            </ChatContainer>
+            <Foot>
+                <TextInput
+                    iconLeft={<Icon icon={faSmile} size="lg" />}
+                    placeholder="Type Messages..."
+                />
+                <SendButton>
+                    <Icon
+                        size="lg"
+                        icon={faPaperPlane}
+                        style={{ color: '#fff' }}
+                    />
+                </SendButton>
+            </Foot>
+        </RightPanel>
+    );
+
     return (
         <Container>
             <Header />
             <CardContainer>
                 <LeftPanelWrapper />
-                <RightPanel>
-                    <PeopleHeader>
-                        <Avatar
-                            src={require('../../assets/avatar.svg')}
-                            alt="Avatar"
-                            width="60px"
-                            height="60px"
-                        />
-                        <div>
-                            <PersonalName>Snehal Dighorikar</PersonalName>
-                            <StatusText>Online</StatusText>
-                        </div>
-                    </PeopleHeader>
-                    <ChatContainer>
-                        {Array.from({ length: 10 }, (o) => (
-                            <>
-                                <Message verient="RECEIVER">
-                                    <ReceiversMessage>Hi!</ReceiversMessage>
-                                </Message>
-                                <Message verient="SENDER">
-                                    <SendersMessage>Hello</SendersMessage>
-                                </Message>
-                            </>
-                        ))}
-                    </ChatContainer>
-                    <Foot>
-                        <TextInput placeholder="Type Messages..." />
-                        <SendButton>
-                            <Icon
-                                size="lg"
-                                icon={faPaperPlane}
-                                style={{ color: '#fff' }}
-                            />
-                        </SendButton>
-                    </Foot>
-                </RightPanel>
+                <RightPanelWrapper />
             </CardContainer>
         </Container>
     );
@@ -165,6 +174,7 @@ const PersonalName = styled.p`
     font-weight: bold;
     margin: 0px 20px;
     color: ${colors.primary};
+    overflow-x: hidden;
 
     font-family: Roboto;
     font-style: normal;
@@ -176,6 +186,10 @@ const StatusText = styled.div`
     font-size: 16px;
     margin: 0px 20px;
     color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     font-family: Roboto;
     font-style: normal;
@@ -203,13 +217,27 @@ const PeoplesListContainer = styled(FlexDisplay)`
 const PeopleDetails = styled.div`
     height: 100%;
     padding: 10px 0px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 const PeopleContainer = styled(PeopleHeader)`
+    position: relative;
     cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
+        &::before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            content: '';
+            background-color: ${colors.primary};
+            transition: all 0.25s linear;
+        }
     }
 `;
 
@@ -219,6 +247,10 @@ const PeopleName = styled(PersonalName)`
     font-weight: bold;
     font-size: 18px;
     line-height: 21px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 const SearchContainer = styled.div`
@@ -240,7 +272,8 @@ const ChatContainer = styled.div`
 
 const Foot = styled(FlexDisplay)`
     flex-direction: row;
-    justify-content: center;
+    width: 100%;
+    //justify-content: center;
     align-items: center;
     height: 100px;
     padding: 0px 40px;

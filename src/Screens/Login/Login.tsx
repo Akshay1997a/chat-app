@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import {
     AnimatedView,
+    Avatar,
     Container,
     TextButton,
     Title,
@@ -402,11 +403,6 @@ const AvatarEdit = ({ currectSrc, alt }: any) => {
     );
 };
 
-export const Avatar = styled.img`
-    /* width: 100%;
-    height: 100%; */
-`;
-
 const AvatarContainer = styled.div`
     position: relative;
     width: 150px;
@@ -420,12 +416,5 @@ const AvatarContainer = styled.div`
 
     input {
         opacity: 0;
-    }
-
-    &:hover {
-        ${Avatar} {
-            opacity: 0.7;
-            transition: all 0.25s linear;
-        }
     }
 `;

@@ -21,10 +21,11 @@ export const TextInput = (props: TextInputProps) => {
 };
 
 const InputContainer = styled.div`
+    flex: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: inherit;
     padding: 15px 20px;
     border-radius: ${metrics.baseRadius}px;
     border: none;
