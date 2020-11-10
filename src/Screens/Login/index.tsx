@@ -1,4 +1,3 @@
-import { Auth } from 'aws-amplify';
 import React, { useRef, useState } from 'react';
 import { Form as BSForm, FormGroup as BSFormGroup } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
@@ -14,6 +13,7 @@ import {
 import { Button } from '../../Components/Buttons';
 import Header from '../../Components/Header/Header';
 import { colors } from '../../Styles';
+import { Auth } from 'aws-amplify';
 import { AWS_EXCEPTIONS } from '../../Types/AWS_CONSTANTS';
 import {
     LoginFromProps,
@@ -21,7 +21,6 @@ import {
     SignupFromProps,
     VerificationFormProps,
 } from '../../Types/Login/Login';
-import './Login-style.scss';
 
 const USER = {
     email: 'test@gmail.com',
@@ -56,28 +55,34 @@ const LoginForm = React.memo(({ changeMode }: LoginFromProps) => {
     const [isLoading, setLoading] = useState(false);
     const history = useHistory();
 
+    const validate = () => {
+        if (emailId === '') {
+            return false;
+        }
+        if (password === '') {
+            return false;
+        }
+        return true;
+    };
+
     const handleLogin = (e: any) => {
         e.preventDefault();
         setLoading(true);
-        if (emailId !== '' && password !== '') {
-            // Auth.signIn({
-            //     username: emailId,
-            //     password,
-            // })
-            //     .then((res) => {
-            //         console.log(res);
-            //     })
-            //     .catch((err) => {
-            //         if (err.code === AWS_EXCEPTIONS.UserNotFoundException) {
-            //         }
-            //         console.log(err);
-            //     });
-            if (emailId === USER.email && password === USER.password) {
-                setTimeout(() => {
+        if (validate()) {
+            Auth.signIn({
+                username: emailId,
+                password,
+            })
+                .then((res) => {
+                    console.log(res);
+                    window.location.href = '/dashboard';
                     setLoading(false);
-                    //history.push('/dashboard');
-                }, 2 * 1000);
-            }
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    setEmailErrMsg(err.message);
+                    console.log(err);
+                });
         } else {
             setEmailErrMsg('Please enter you email id.');
             setLoading(false);
@@ -267,6 +272,7 @@ function VerificationForm({ username, callback }: VerificationFormProps) {
 
 function ProfileSetupForm() {
     const [userName, setUserName] = useState('');
+    const [userStatus, setUserStatus] = useState('');
 
     const handleSubmit = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {};
 
@@ -283,6 +289,14 @@ function ProfileSetupForm() {
                         placeholder="Enter name"
                         value={userName}
                         onChange={(e: any) => setUserName(e.target.value)}
+                    />
+                </FormGroup>
+                <FormGroup>
+                    <FormControl
+                        type="text"
+                        placeholder="Status"
+                        value={userStatus}
+                        onChange={(e: any) => setUserStatus(e.target.value)}
                     />
                 </FormGroup>
                 <Button type="submit" onClick={handleSubmit}>
@@ -325,6 +339,7 @@ const FormGroup = styled(BSFormGroup)`
 
 const FormControl = styled(BSForm.Control)`
     padding: 30px 20px;
+    /* margin: 10px 0px; */
     color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
     background: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
     transition: all 0.25s linear;

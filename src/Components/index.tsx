@@ -94,7 +94,11 @@ interface AvatarProps
 
 export const Avatar = (props: AvatarProps) => (
     <AvatarContainer>
-        <img {...props} alt={props.alt} />
+        <img
+            {...props}
+            alt={props.alt}
+            style={{ objectFit: 'contain', width : '100%', height: 'auto' }}
+        />
         {props.activeStatus && (
             <ActiveStatus status={props.activeStatus || 'NONE'} />
         )}

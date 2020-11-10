@@ -226,6 +226,12 @@ const PeopleDetails = styled.div`
 const PeopleContainer = styled(PeopleHeader)`
     position: relative;
     cursor: pointer;
+    transition: all 0.25s linear;
+
+    &:active {
+        scale: 0.95;
+        transition: all 0.25s linear;
+    }
 
     &:hover {
         &::before {
@@ -287,6 +293,24 @@ const SendButton = styled.button`
     border: none;
     margin-left: 20px;
     padding: 0px;
+    transition: all 0.25s linear;
+
+    &:focus{
+        border: none;
+        outline: none;
+    }
+
+    &:hover {
+        background-color: ${(props: any) =>
+            !props.isLoading
+                ? '#6366fb'
+                : props.theme.SECONDARY_BACKGROUND_COLOR};
+    }
+
+    &:active {
+        scale: 0.95;
+        transition: all 0.25s linear;
+    }
 `;
 
 interface MessageProps {

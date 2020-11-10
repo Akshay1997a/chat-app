@@ -39,11 +39,17 @@ const ButtonContainer = styled.div`
         !props.isLoading ? 'pointer' : 'default'};
     border: none;
     overflow: hidden;
+    transition: all 0.25s linear;
 
     &:hover {
         background-color: ${(props: any) =>
             !props.isLoading
                 ? '#6366fb'
                 : props.theme.SECONDARY_BACKGROUND_COLOR};
+    }
+
+    &:active {
+        scale: 0.95;
+        transition: all 0.25s linear;
     }
 `;

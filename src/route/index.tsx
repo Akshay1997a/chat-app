@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Dashboard } from '../Screens/Dashboard';
-import Login from '../Screens/Login/Login';
+import Login from '../Screens/Login';
 
 export enum ROUTE_PATHS {
     LOGIN = '/',

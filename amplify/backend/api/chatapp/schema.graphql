@@ -1,0 +1,38 @@
+type User @model {
+    id: ID!
+    name: String!
+    status: String
+    avatar: String
+    created_at: String
+    isVerified: Boolen
+}
+
+type Room @model {
+    id: ID!
+    title: String
+    created_at: String
+}
+
+type Messages @model {
+    messages: [Message]
+}
+
+type Message @model {
+    id: ID!
+    parentId: ID
+    roomId: ID
+    roomType: group
+    toPersonId: ID
+    toPersonEmail: String
+    text: String
+    markdown: String
+    html: String
+    files: [String]
+    personId: ID
+    personEmail: String
+    mentionedPeople: [ID]
+    mentionedGroups: [String]
+    attachments: [String]
+    created: String
+    updated: String
+}
