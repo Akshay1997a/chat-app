@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Dashboard } from '../Screens/Dashboard';
-import Login from '../Screens/Login';
+import Auth from '../Screens/Auth';
 
 export enum ROUTE_PATHS {
     LOGIN = '/',
@@ -13,7 +13,7 @@ function RouteStack() {
         <Router>
             <Switch>
                 <Route exact path={ROUTE_PATHS.LOGIN}>
-                    <Login />
+                    <Auth />
                 </Route>
                 <Route path={ROUTE_PATHS.DASHBOARD}>
                     <Dashboard />

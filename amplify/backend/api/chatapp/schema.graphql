@@ -1,27 +1,25 @@
 type User @model {
     id: ID!
-    name: String!
+    userName: String!
+    name: String
     status: String
+    isVerified: Boolean
+    isDeactive: Boolean
     avatar: String
-    created_at: String
-    isVerified: Boolen
 }
 
 type Room @model {
     id: ID!
     title: String
-    created_at: String
+    description: String
+    messages: [Message] @connection(keyName: "byRoom", fields: ["id"])
 }
 
-type Messages @model {
-    messages: [Message]
-}
-
-type Message @model {
+type Message @model @key(name: "byRoom", fields: ["roomId"]) {
     id: ID!
     parentId: ID
-    roomId: ID
-    roomType: group
+    roomId: ID!
+    roomType: String
     toPersonId: ID
     toPersonEmail: String
     text: String
@@ -33,6 +31,4 @@ type Message @model {
     mentionedPeople: [ID]
     mentionedGroups: [String]
     attachments: [String]
-    created: String
-    updated: String
 }

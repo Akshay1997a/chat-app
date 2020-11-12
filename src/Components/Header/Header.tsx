@@ -7,24 +7,36 @@ import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 
 export function Header() {
     const switchRef = React.createRef<HTMLDivElement>();
-    const toggleTheme = useContext(MyTheme);
+    const { isDarkMode, toggleTheme } = useContext(MyTheme);
+
+    const darkMode = () => {
+        switchRef.current?.style.setProperty('left', '33px');
+        switchRef.current?.style.setProperty('transition', '.25s linear');
+    };
+
+    const lightMode = () => {
+        switchRef.current?.style.setProperty('left', '3px');
+        switchRef.current?.style.setProperty('transition', '.25s linear');
+    };
+
     const changeTheme = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
         toggleTheme();
 
-        if (switchRef.current?.style.getPropertyValue('left') === '3px') {
-            switchRef.current?.style.setProperty('left', '33px');
-            switchRef.current?.style.setProperty('transition', '.25s linear');
+        if (isDarkMode) {
+            lightMode();
         } else {
-            switchRef.current?.style.setProperty('left', '3px');
-            switchRef.current?.style.setProperty('transition', '.25s linear');
+            darkMode();
         }
     };
 
     useEffect(() => {
-        switchRef.current?.style.setProperty('left', '3px');
-        switchRef.current?.style.setProperty('transition', '.3s linear');
-    }, []);
+        if (isDarkMode) {
+            darkMode();
+        } else {
+            lightMode();
+        }
+    });
 
     return (
         <HeaderBar fluid={true}>

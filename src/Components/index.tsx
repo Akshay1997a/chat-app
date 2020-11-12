@@ -97,7 +97,7 @@ export const Avatar = (props: AvatarProps) => (
         <img
             {...props}
             alt={props.alt}
-            style={{ objectFit: 'contain', width : '100%', height: 'auto' }}
+            //style={{ objectFit: 'contain', width : '100%', height: 'auto' }}
         />
         {props.activeStatus && (
             <ActiveStatus status={props.activeStatus || 'NONE'} />

@@ -98,7 +98,11 @@ export function Dashboard() {
             </ChatContainer>
             <Foot>
                 <TextInput
-                    iconLeft={<Icon icon={faSmile} size="lg" />}
+                    iconLeft={
+                        <EmojyButton onClick={() => alert('hit')}>
+                            <Icon icon={faSmile} size="lg" />
+                        </EmojyButton>
+                    }
                     placeholder="Type Messages..."
                 />
                 <SendButton>
@@ -159,6 +163,18 @@ const LeftPanel = styled(FlexDisplay)`
 
 const RightPanel = styled(FlexDisplay)`
     flex: 2;
+`;
+
+const EmojyButton = styled.button`
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    &:focus{
+        border: none;
+    }
 `;
 
 const PeopleHeader = styled.div`
@@ -279,6 +295,7 @@ const ChatContainer = styled.div`
 const Foot = styled(FlexDisplay)`
     flex-direction: row;
     width: 100%;
+    //background-color: ${props => props.theme.PRIMARY_BACKGROUND_COLOR};
     //justify-content: center;
     align-items: center;
     height: 100px;
@@ -295,7 +312,7 @@ const SendButton = styled.button`
     padding: 0px;
     transition: all 0.25s linear;
 
-    &:focus{
+    &:focus {
         border: none;
         outline: none;
     }

@@ -24,5 +24,10 @@
       }
     }
   },
-  "storage": {}
+  "storage": {
+    "chatapp": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  }
 }
