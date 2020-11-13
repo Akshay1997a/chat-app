@@ -13,8 +13,12 @@ import { TextInput } from '../../Components/Inputs/index';
 import { colors, metrics } from '../../Styles';
 import { Avatar } from '../../Components';
 import { PeopleComponentProps } from '../../Types/People';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../Redux';
 
 export function Dashboard() {
+    const userInfo = useSelector((state: RootState) => state.userInfo);
+
     const PeopleComponent = ({ displayName, status }: PeopleComponentProps) => (
         <PeopleContainer>
             <Avatar
@@ -44,8 +48,8 @@ export function Dashboard() {
                     activeStatus="ACTIVE"
                 />
                 <div style={{ flex: 1 }}>
-                    <PersonalName>Akshay Dighorikar</PersonalName>
-                    <StatusText>Senior Developer</StatusText>
+                    <PersonalName>{userInfo.name}</PersonalName>
+                    <StatusText>{userInfo.status}</StatusText>
                 </div>
                 <a href="none">
                     <Icon size="lg" icon={faPencilAlt} />
@@ -58,14 +62,7 @@ export function Dashboard() {
                     iconRight={<Icon size="lg" icon={faSearch} />}
                 />
             </SearchContainer>
-            <PeoplesListContainer>
-                {Array.from({ length: 20 }, (v) => (
-                    <PeopleComponent
-                        displayName={'Akshay Dighorikar'}
-                        status="Hi there! I am using NearMe"
-                    />
-                ))}
-            </PeoplesListContainer>
+            <PeoplesListContainer></PeoplesListContainer>
         </LeftPanel>
     );
 
@@ -172,7 +169,7 @@ const EmojyButton = styled.button`
     border: none;
     outline: none;
 
-    &:focus{
+    &:focus {
         border: none;
     }
 `;
@@ -295,7 +292,7 @@ const ChatContainer = styled.div`
 const Foot = styled(FlexDisplay)`
     flex-direction: row;
     width: 100%;
-    //background-color: ${props => props.theme.PRIMARY_BACKGROUND_COLOR};
+    //background-color: ${(props) => props.theme.PRIMARY_BACKGROUND_COLOR};
     //justify-content: center;
     align-items: center;
     height: 100px;

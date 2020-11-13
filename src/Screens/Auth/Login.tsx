@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { API, Auth, graphqlOperation } from 'aws-amplify';
+import React, { createRef, useEffect, useState } from 'react';
+import { Auth } from 'aws-amplify';
 import { AnimatedView, Title, TextButton } from '../../Components';
 import { Button } from '../../Components/Buttons';
 import { LoginFromProps } from '../../Types/Login/Login';
@@ -12,13 +12,16 @@ import {
 } from './Signup';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getUser } from '../../graphql/queries';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../../Redux/UserState/userActions';
+import { getUser } from '../../Network/Users';
 
 export const LoginForm = React.memo(({ changeMode }: LoginFromProps) => {
     const [emailId, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const userNameRef = createRef<React.HTMLAttributes<'input'>>();
+    const passwordRef = createRef();
 
     const [errorMsg, setErrorMsg] = useState('');
     const [emailErrMsg, setEmailErrMsg] = useState('');
@@ -50,12 +53,9 @@ export const LoginForm = React.memo(({ changeMode }: LoginFromProps) => {
                 .then(async (res) => {
                     console.log(res);
                     console.log(res.username);
-                    const data: any = await API.graphql({
-                        query: getUser,
-                        variables: { id: res.username },
-                    });
-                    dispatch(addUser(data.data.getUser));
+                    const data: any = await getUser({ id: res.username });
                     console.log(data);
+                    dispatch(addUser(data.data.getUser));
                     window.location.href = '/dashboard';
                     setLoading(false);
                 })
@@ -81,6 +81,8 @@ export const LoginForm = React.memo(({ changeMode }: LoginFromProps) => {
             <Form>
                 <FormGroup style={{}}>
                     <FormControl
+                        ref={userNameRef}
+                        autoFocus={true}
                         type="email"
                         placeholder="User Name"
                         value={emailId}
@@ -90,6 +92,7 @@ export const LoginForm = React.memo(({ changeMode }: LoginFromProps) => {
                 </FormGroup>
                 <FormGroup>
                     <FormControl
+                        ref={passwordRef}
                         type="password"
                         placeholder="Password"
                         value={password}

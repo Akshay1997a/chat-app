@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../../Redux/UserState/userActions';
-import { createUser, updateUser } from '../../graphql/mutations';
+import { createUser, updateUser } from '../../Network/Users';
 import { CreateUserInput, UpdateUserInput } from '../../API';
 
 type SIGNUP_MODES = 'REGISTRATION' | 'VERIFICATION' | 'PROFILE_SETUP';
@@ -71,15 +71,15 @@ export const SignupForm = React.memo(({ changeMode }: SignupFromProps) => {
                 username: emailId,
                 password,
             })
-                .then((res) => {
+                .then(async (res) => {
                     console.log(res);
                     const data: CreateUserInput = {
                         id: res.userSub,
                         userName: emailId,
                     };
-                    setMode('VERIFICATION');
-                    API.graphql(graphqlOperation(createUser, { input: data }));
+                    await createUser(data);
                     dispatch(addUser({ id: res.userSub, userName: emailId }));
+                    setMode('VERIFICATION');
                 })
                 .catch((err) => {
                     setErrorMsg(err.message);
@@ -88,14 +88,14 @@ export const SignupForm = React.memo(({ changeMode }: SignupFromProps) => {
         }
     };
 
-    const handleSubmit = (res: any) => {
+    const handleSubmit = async (res: any) => {
         console.log(id);
         if (res === 'SUCCESS') {
             const data: UpdateUserInput = {
                 id,
                 isVerified: true,
             };
-            API.graphql(graphqlOperation(updateUser, { input: data }));
+            await updateUser(data);
             setMode('PROFILE_SETUP');
         }
     };
@@ -120,6 +120,7 @@ export const SignupForm = React.memo(({ changeMode }: SignupFromProps) => {
                 <FormGroup style={{}}>
                     <FormControl
                         type="email"
+                        autoFocus={true}
                         placeholder="Enter email"
                         value={emailId}
                         onChange={(e: any) => setEmail(e.target.value)}
@@ -180,6 +181,7 @@ function VerificationForm({ username, callback }: VerificationFormProps) {
                 <FormGroup>
                     <FormControl
                         type="text"
+                        autoFocus={true}
                         placeholder="Enter code"
                         value={code}
                         onChange={(e: any) => setCode(e.target.value)}
@@ -254,6 +256,7 @@ function ProfileSetupForm() {
                 <FormGroup>
                     <FormControl
                         type="text"
+                        autoFocus={true}
                         placeholder="Enter name"
                         value={userName}
                         onChange={(e: any) => setUserName(e.target.value)}
@@ -349,6 +352,7 @@ export const FormControl = styled(BSForm.Control)`
         background: ${(props) => props.theme.SECONDARY_BACKGROUND_COLOR};
         color: ${(props) => props.theme.SECONDARY_TEXT_COLOR};
         border-color: ${() => colors.primary};
+        box-shadow: none;
     }
 `;
 
